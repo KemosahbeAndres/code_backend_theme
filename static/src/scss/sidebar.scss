@@ -1,0 +1,216 @@
+/* No longer defining sidebar widths here, using variables from theme_accent.scss */
+
+#sidebar_panel {
+    height: calc(100% - 60px); /* Adjusted height to account for topbar */
+	position: fixed;
+    top: 60px; /* Positioned below the topbar */
+    background-color: $sidebar_accent;
+    display: block;
+    width: $sidebar-width; /* Use $sidebar-width from theme_accent.scss */
+    -ms-overflow-style: none;  /* Hide scrollbar for IE and Edge */
+    scrollbar-width: none;  /* Hide scrollbar for Firefox */
+    z-index: 999;
+    transition: width 0.3s ease; /* Smooth transition for width */
+    overflow: hidden; /* This is key for the clipping effect */
+}
+#sidebar_panel::-webkit-scrollbar {
+    display: none; /* Hide scrollbar for Chrome, Safari and Opera */
+}
+.sidebar_panel .sidebar {
+    padding: 0;
+    white-space: nowrap;
+    height: 100%; /* Ensure sidebar content takes full height */
+    display: flex; /* Use flexbox for layout */
+    flex-direction: column; /* Arrange items vertically */
+    overflow: hidden;
+}
+.sidebar_panel .sidebar_close {
+    text-align: end;
+    display: none;
+    position: sticky;
+    height: 35px;
+    padding-top: 5px;
+    top: 0;
+    background: $sidebar_accent;
+    z-index: 1;
+}
+.sidebar_panel .sidebar_close a#closeSidebar {
+    font-size: 18px;
+    margin-right: 10px;
+    color: #ffffff;
+    opacity: .3;
+}
+.sidebar_panel .sidebar_close a#closeSidebar img {
+    width: 15px;
+}
+/* Removed sidebar_logo styles as it's moved to topbar */
+.sidebar_panel .sidebar .sidebar_head {
+    padding-top: 20px;
+    padding-left: 15px;
+    color: #6a7187;
+    font-size: 14px;
+}
+.sidebar_panel .sidebar .sidebar_menu {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    flex-grow: 1; /* Allow menu to take available space */
+    overflow-y: auto; /* Allow scrolling for the main menu */
+}
+.sidebar_panel .sidebar .sidebar_menu li {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    display: block;
+}
+.sidebar_panel .sidebar .sidebar_menu li a {
+    margin: 0;
+    border: 0;
+    height: 50px;
+    display: grid; /* Use flex for alignment */
+    justify-content: start;
+    align-items: center; /* Vertically center content */
+    justify-items: center;
+    grid-auto-flow: column;
+    grid-template-columns: 40px auto;
+    cursor: pointer;
+    overflow: hidden; /* This clips the text as the parent shrinks */
+    padding: 10px 10px 10px 10px;
+    color: #ffffff;
+    font-size: 13px;
+    transition: all 0.3s ease; /* Animate background and padding */
+}
+.sidebar_panel .sidebar .sidebar_menu li:hover  a {
+    background: #1e2230;
+    color: #fff;
+}
+.sidebar_panel .nav-link {
+	opacity: .5;
+    transition:.3s all;
+}
+.sidebar_panel .sidebar a.nav-link.active {
+    color: #fff !important;
+	opacity: 1;
+}
+.sidebar_panel .sidebar .sidebar_menu li a .sidebar_img {
+    width: 20px;
+    margin-right: 8px;
+}
+
+/* Text will now fade out with a delay */
+body, .sidebar_app_name {
+    opacity: 1;
+    transition: all 0.3s ease; /* Fade out over 0.1s after a 0.1s delay */
+    transition-behavior: allow-discrete;
+}
+
+/* Styles for the bottom menu container */
+.sidebar_bottom_menu {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    flex-shrink: 0; /* Prevent the bottom menu from shrinking */
+}
+
+.sidebar_bottom_menu li {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    display: block;
+}
+
+.sidebar_bottom_menu li a {
+    margin: 0;
+    border: 0;
+    height: 50px;
+    display: grid; /* Use flex for alignment */
+    justify-content: start;
+    align-items: center; /* Vertically center content */
+    justify-items: center;
+    grid-auto-flow: column;
+    grid-template-columns: 40px auto;
+    cursor: pointer;
+    overflow: hidden; /* This clips the text as the parent shrinks */
+    padding: 10px 10px 10px 10px;
+    color: #ffffff;
+    font-size: 13px;
+    transition: all 0.3s ease; /* Animate background and padding */
+}
+
+.sidebar_bottom_menu li:hover  a {
+    background: #1e2230;
+    color: #fff;
+}
+
+
+/* Styles for sidebar_toggler as a menu item */
+a.sidebar_toggler:hover, .sidebar_menu li:hover a.sidebar_toggler {
+    background-color: $sidebar_accent !important; /* Same as sidebar */
+}
+
+a.sidebar_toggler:hover {
+    color: #fff;
+}
+
+a.sidebar_toggler .o_sidebar_arrow {
+    margin-right: 10px; /* Space between icon and text */
+    width: 16px; /* Set a fixed width for the SVG */
+    height: 16px; /* Set a fixed height for the SVG */
+    flex-shrink: 0; /* Prevent the icon from shrinking */
+}
+
+a.sidebar_toggler .o_sidebar_arrow path {
+    fill: #ffffff; /* Set the fill color of the SVG path to white */
+}
+
+.o_sidebar_arrow {
+    transition: transform 0.3s ease; /* Smooth transition for rotation */
+}
+
+.o_sidebar_arrow_rotated {
+    transform: rotate(180deg); /* Rotate for caret-left to point right */
+}
+
+/* When sidebar is collapsed */
+body.o_sidebar_collapsed #sidebar_panel {
+    width: $sidebar-collapsed-width; /* Collapsed width */
+}
+
+body.o_sidebar_collapsed .sidebar_menu li a {
+    grid-template-columns: $sidebar-collapsed-width;
+    justify-items: center;
+    padding: 8px 0;
+}
+
+body.o_sidebar_collapsed .sidebar_menu li a .sidebar_app_icon,
+body.o_sidebar_collapsed .sidebar_menu li a .sidebar_img {
+    margin-right: 0;
+}
+
+/* Fade out the text and make it unclickable */
+body.o_sidebar_collapsed {
+    .sidebar_app_name {
+        opacity: 0;
+        pointer-events: none; /* Prevent interaction with the invisible text */
+    }
+}
+
+body.o_sidebar_collapsed a.sidebar_toggler {
+    grid-template-columns: $sidebar-collapsed-width;
+    justify-items: center;
+    padding: 8px 0;
+}
+
+body.o_sidebar_collapsed a.sidebar_toggler .o_sidebar_arrow {
+    margin-right: 0; /* Remove margin for centered icon */
+}
+
+/* Adjust main content area when sidebar is collapsed */
+.o_action_manager {
+    margin-left: $sidebar-width; /* Initial margin for expanded sidebar */
+    transition: margin-left 0.3s ease;
+}
+
+body.o_sidebar_collapsed .o_action_manager {
+    margin-left: $sidebar-collapsed-width; /* Margin for collapsed sidebar */
+}

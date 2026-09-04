@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Barra de Accesibilidad - SLEP Chinchorro
+    WCAG 2.1 AA · NTS-WEB Chile · SENADIS
+-->
+<templates xml:space="preserve">
+    <t t-name="code_backend_theme.AccessibilityTray">
+        <div class="o_a11y_tray" t-ref="root">
+
+            <!-- ── Botón disparador ─────────────────────────────────────────── -->
+            <button
+                type="button"
+                class="o_a11y_tray_trigger"
+                t-on-click="togglePanel"
+                t-att-aria-expanded="state.isOpen ? 'true' : 'false'"
+                aria-haspopup="true"
+                aria-controls="o_a11y_panel"
+                aria-label="Herramientas de accesibilidad"
+                title="Herramientas de accesibilidad"
+            >
+                <i class="fa fa-universal-access" aria-hidden="true"/>
+                <span class="o_a11y_tray_label" aria-hidden="true">Acc.</span>
+            </button>
+
+            <!-- ── Panel de accesibilidad ────────────────────────────────────── -->
+            <div
+                t-if="state.isOpen"
+                id="o_a11y_panel"
+                class="o_a11y_panel"
+                role="region"
+                aria-labelledby="o_a11y_panel_title"
+                t-on-click.stop=""
+            >
+                <!-- Encabezado del panel -->
+                <div class="o_a11y_panel_header">
+                    <h2 class="o_a11y_panel_title" id="o_a11y_panel_title">
+                        <i class="fa fa-universal-access me-2" aria-hidden="true"/>
+                        Accesibilidad
+                    </h2>
+                    <button
+                        type="button"
+                        class="o_a11y_close_btn"
+                        t-on-click="togglePanel"
+                        aria-label="Cerrar panel de accesibilidad"
+                        title="Cerrar"
+                    >
+                        <i class="fa fa-times" aria-hidden="true"/>
+                    </button>
+                </div>
+
+                <!-- ── Sección: Tamaño de texto ──────────────────────────── -->
+                <section class="o_a11y_section" aria-labelledby="o_a11y_font_heading">
+                    <h3 class="o_a11y_section_heading" id="o_a11y_font_heading">
+                        <i class="fa fa-font me-2" aria-hidden="true"/>
+                        Tamaño del texto
+                    </h3>
+
+                    <div class="o_a11y_font_row" role="group" aria-labelledby="o_a11y_font_heading">
+                        <button
+                            type="button"
+                            class="o_a11y_font_btn o_a11y_font_decrease"
+                            t-on-click="decreaseFontSize"
+                            t-att-disabled="!canDecrease"
+                            t-att-aria-disabled="!canDecrease ? 'true' : 'false'"
+                            aria-label="Reducir tamaño de texto"
+                            title="Reducir texto"
+                        >
+                            A<sub aria-hidden="true">−</sub>
+                        </button>
+                        <button
+                            type="button"
+                            class="o_a11y_font_btn o_a11y_font_reset"
+                            t-on-click="resetFontSize"
+                            aria-label="Restablecer tamaño de texto predeterminado"
+                            title="Tamaño normal"
+                        >A</button>
+                        <button
+                            type="button"
+                            class="o_a11y_font_btn o_a11y_font_increase"
+                            t-on-click="increaseFontSize"
+                            t-att-disabled="!canIncrease"
+                            t-att-aria-disabled="!canIncrease ? 'true' : 'false'"
+                            aria-label="Aumentar tamaño de texto"
+                            title="Aumentar texto"
+                        >
+                            A<sup aria-hidden="true">+</sup>
+                        </button>
+                    </div>
+
+                    <!-- Anuncio de estado accesible (aria-live) -->
+                    <p class="o_a11y_size_label" aria-live="polite" aria-atomic="true">
+                        <t t-esc="currentFontLabel"/>
+                    </p>
+                </section>
+
+                <!-- ── Sección: Alto Contraste ───────────────────────────── -->
+                <section class="o_a11y_section" aria-labelledby="o_a11y_contrast_heading">
+                    <h3 class="o_a11y_section_heading" id="o_a11y_contrast_heading">
+                        <i class="fa fa-adjust me-2" aria-hidden="true"/>
+                        Contraste
+                    </h3>
+                    <button
+                        type="button"
+                        class="o_a11y_mode_btn"
+                        t-on-click="toggleHighContrast"
+                        t-att-aria-pressed="state.highContrast ? 'true' : 'false'"
+                        t-att-class="{ 'o_a11y_mode_active': state.highContrast }"
+                        aria-label="Alto contraste: texto blanco y amarillo sobre fondo negro"
+                    >
+                        <span class="o_a11y_mode_icon" aria-hidden="true">◑</span>
+                        <span class="o_a11y_mode_name">Alto Contraste</span>
+                        <span class="o_a11y_mode_badge" t-att-class="{ 'o_a11y_badge_on': state.highContrast }">
+                            <t t-if="state.highContrast">ON</t>
+                            <t t-else="">OFF</t>
+                        </span>
+                    </button>
+                </section>
+
+                <!-- ── Sección: Modo Oscuro ──────────────────────────────── -->
+                <section class="o_a11y_section" aria-labelledby="o_a11y_dark_heading">
+                    <h3 class="o_a11y_section_heading" id="o_a11y_dark_heading">
+                        <i class="fa fa-moon-o me-2" aria-hidden="true"/>
+                        Apariencia
+                    </h3>
+                    <button
+                        type="button"
+                        class="o_a11y_mode_btn"
+                        t-on-click="toggleDarkMode"
+                        t-att-aria-pressed="state.darkMode ? 'true' : 'false'"
+                        t-att-class="{ 'o_a11y_mode_active': state.darkMode }"
+                        aria-label="Modo oscuro: fondo oscuro con texto claro"
+                    >
+                        <i class="fa fa-moon-o o_a11y_mode_icon" aria-hidden="true"/>
+                        <span class="o_a11y_mode_name">Modo Oscuro</span>
+                        <span class="o_a11y_mode_badge" t-att-class="{ 'o_a11y_badge_on': state.darkMode }">
+                            <t t-if="state.darkMode">ON</t>
+                            <t t-else="">OFF</t>
+                        </span>
+                    </button>
+                </section>
+
+                <!-- ── Pie del panel ─────────────────────────────────────── -->
+                <div class="o_a11y_panel_footer" role="contentinfo">
+                    <small>WCAG 2.1 AA · NTS-WEB Chile · SENADIS</small>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

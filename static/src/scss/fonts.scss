@@ -1,0 +1,48 @@
+/*
+  Font Definition for the Digital Government of Chile Framework.
+  - Body: Roboto
+  - Titles: Roboto Slab
+  The font files are expected to be in ../fonts/
+*/
+
+/* --- Roboto (Body) --- */
+// Regular
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 400;
+  src: url('../fonts/Roboto-Regular.ttf');
+}
+
+// Italic
+@font-face {
+  font-family: 'Roboto';
+  font-style: italic;
+  font-weight: 400;
+  src: url('../fonts/Roboto-Italic.ttf');
+}
+
+// Bold
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 700;
+  src: url('../fonts/Roboto-Bold.ttf');
+}
+
+/* --- Roboto Slab (Titles) --- */
+// Regular
+@font-face {
+  font-family: 'Roboto Slab';
+  font-style: normal;
+  font-weight: 400;
+  src: url('../fonts/RobotoSlab-Regular.ttf');
+}
+
+// Bold
+@font-face {
+  font-family: 'Roboto Slab';
+  font-style: normal;
+  font-weight: 700;
+  src: url('../fonts/RobotoSlab-Bold.ttf');
+}

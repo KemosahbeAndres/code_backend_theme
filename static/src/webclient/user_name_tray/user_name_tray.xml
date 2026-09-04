@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.UserNameTray">
+        <div class="align-self-center d-none d-md-block">
+            <t t-esc="user.name"/>
+        </div>
+    </t>
+</templates>

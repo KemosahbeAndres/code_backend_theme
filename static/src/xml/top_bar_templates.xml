@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+    <!--  Inherit navbar  -->
+    <t t-inherit="web.NavBar" t-inherit-mode="extension" owl="1">
+        <xpath expr="//nav[hasclass('o_main_navbar')]" position="replace">
+            <nav class="o_main_navbar d-flex justify-content-between"
+                 t-ref="o_main_navbar"
+                 t-on-dropdown-item-selected="onNavBarDropdownItemSelection"
+                 data-command-category="navbar">
+                <div class="d-flex gap-2">
+                    <div class="top_heading d-flex" t-ref="top_heading">
+                        <div class="topbar_logo">
+                            <a href="/odoo">
+                                <img src="/code_backend_theme/static/src/img/logotipo_slep_chinchorro_black.png"
+                                     class="logo_img"/>
+                            </a>
+                        </div>
+                        <!-- App Brand -->
+                        <DropdownItem
+                                t-if="currentApp"
+                                t-esc="currentApp.name"
+                                class="'o_menu_brand d-none d-md-block'"
+                                onSelected="() => this.onNavBarDropdownItemSelection(currentApp)"
+                                attrs="{ href: getMenuItemHref(currentApp), 'data-menu-xmlid': currentApp.xmlid, 'data-section': currentApp.id }"
+                        />
+                    </div>
+                    <!--
+                      Standard Odoo logic for displaying the sections menu.
+                    -->
+                    <t t-if="!env.isSmall">
+                        <t t-if="currentAppSections.length" t-call="web.NavBar.SectionsMenu" class="w-100">
+                            <t t-set="sections" t-value="currentAppSections" />
+                        </t>
+                    </t>
+                </div>
+                <!-- Systray -->
+                <div class="o_menu_systray d-flex flex-shrink-0 ms-auto align-items-end" role="menu">
+                    <t t-foreach="systrayItems" t-as="item" t-key="item_index">
+                        <t t-if="item.Component.name !== 'SwitchCompanyMenu'">
+                            <div t-att-data-index="item.index"/>
+                            <ErrorHandler
+                                    onError="error => handleItemError(error, item)">
+                                <t t-component="item.Component"
+                                   t-props="item.props"/>
+                            </ErrorHandler>
+                        </t>
+                    </t>
+                </div>
+            </nav>
+            <div class="sidebar_panel" id="sidebar_panel" t-ref="sidebar">
+                <div class="sidebar">
+                    <ul class="sidebar_menu mt-2" t-ref="sidebarLinks">
+                        <t t-foreach="menuService.getApps()" t-as="app"
+                           t-key="app_index">
+                            <li t-if="app.xmlid !== 'base.menu_management' or (app.xmlid == 'base.menu_management' and state.isSystemAdmin)" data-toggle="tooltip" data-placement="right"
+                                t-att-title="app.name">
+                                <a role="menuitem"
+                                   t-attf-href="#menu_id={{app.id}}"
+                                   t-att-data-id="app.id"
+                                   attrs="{ href: getMenuItemHref(app), 'data-menu-xmlid': app.xmlid, 'data-section': app.id }"
+                                   class="nav-link"
+                                   t-on-click="() => this.onNavBarDropdownItemSelection(app)">
+                                    <img t-if="app.webIconData"
+                                         class="o_app_icon me-2 sidebar_app_icon"
+                                         t-attf-src="{{app.webIconData}}"/>
+                                    <span class="sidebar_app_name">
+                                        <t t-esc="app.name"/>
+                                    </span>
+                                </a>
+                            </li>
+                        </t>
+                    </ul>
+                    <!-- New container for bottom items -->
+                    <ul class="sidebar_bottom_menu">
+                        <li> <!-- Toggler as a list item -->
+                            <a id="toggleSidebar" class="nav-link sidebar_toggler" style="cursor: pointer;"
+                                t-ref="toggler">
+                                <i class="oi oi-panel-right o_sidebar_arrow" t-att-class="{ 'o_sidebar_arrow_rotated': state.isCollapsed }"/>
+                                <span t-if="!state.isCollapsed" class="sidebar_app_name">Ocultar</span>
+                                <span t-if="state.isCollapsed" class="sidebar_app_name">Mostrar</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <span class="navbar-border-bottom"/>
+
+        </xpath>
+    </t>
+
+    <t t-inherit="web.NavBar.SectionsMenu" t-inherit-mode="extension" owl="1">
+        <xpath expr="//div[hasclass('o_menu_sections')]" position="attributes">
+            <attribute name="class">o_menu_sections d-flex flex-grow-1 flex-shrink-1</attribute>
+        </xpath>
+    </t>
+    <t t-inherit="web.UserMenu" t-inherit-mode="extension" owl="1">
+        <xpath expr="//small[hasclass('oe_topbar_name')]" position="replace">
+            <div class="oe_topbar_name"/>
+        </xpath>
+    </t>
+</templates>

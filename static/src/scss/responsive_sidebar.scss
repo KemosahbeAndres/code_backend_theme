@@ -1,0 +1,61 @@
+/*
+  Responsive styles for the sidebar in code_backend_theme.
+  - On large screens (>= 992px), the sidebar is permanently visible.
+  - On small screens (< 992px), it remains a toggleable menu.
+*/
+
+// Style for the app icons within the sidebar to prevent pixelation.
+.sidebar_app_icon {
+    max-width: 32px;
+    max-height: 32px;
+    width: auto;
+    height: auto;
+    object-fit: contain; /* Ensures the image scales down without distortion */
+}
+
+/* Removed conflicting .sidebar_toggler styles, now handled in sidebar.scss */
+
+
+@media (min-width: 992px) {
+
+    // The sidebar panel itself
+    .sidebar_panel {
+        // Force the sidebar to be always visible
+        display: block !important;
+        // Ensure it has a fixed width
+        /* Width and transition now handled in sidebar.scss */
+    }
+
+    // The main navbar container
+    .o_main_navbar {
+        /* margin-left and transition now handled in sidebar.scss for .o_action_manager */
+        transition: all 0.3s ease; // Keep transition for other properties
+
+        .o_navbar_left_content {
+            /* Removed margin-left from here, now handled by .o_main_navbar */
+            transition: all 0.3s ease; // Keep transition for other properties
+        }
+
+        .top_heading {
+            width: auto;
+        }
+
+        .top_heading > div:first-child {
+            padding: 0 !important;
+            width: 100%;
+            height: 100%;
+            margin-inline-end: 1rem;
+        }
+    }
+
+    .o_navbar_apps_menu {
+        background-color: $sidebar_accent;
+        color: white !important;
+        border-radius: 0 4px 4px 0 !important;
+        padding: 1rem !important;
+
+        li, a, i {
+            color: white !important;
+        }
+    }
+}

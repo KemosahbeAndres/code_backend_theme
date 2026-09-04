@@ -1,0 +1,709 @@
+// =============================================================================
+// ACCESSIBILITY TRAY — Estilos del componente y modos globales
+// SLEP Chinchorro · WCAG 2.1 AA · NTS-WEB Chile · SENADIS
+//
+// Contiene:
+//  1. Estilos del componente systray
+//  2. Clases de tamaño de texto  (body.a11y-text-*)
+//  3. Modo Oscuro               (body.a11y-dark-mode)
+//  4. Alto Contraste Cromático  (body.a11y-high-contrast)
+//  5. Focus visible global      (WCAG 2.4.11 AA)
+// =============================================================================
+
+// =============================================================================
+// 1. COMPONENTE SYSTRAY
+// =============================================================================
+
+.o_a11y_tray {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+// ── Botón disparador ──────────────────────────────────────────────────────────
+.o_a11y_tray_trigger {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 6px 10px;
+    border: none;
+    border-radius: $radius-md;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+    min-height: 44px; // WCAG 2.5.5 — tamaño mínimo de área táctil 44×44px
+    min-width: 44px;
+
+    .fa {
+        font-size: 18px;
+        line-height: 1;
+    }
+
+    &:hover {
+        background-color: rgba(0, 0, 0, 0.08);
+    }
+
+    &:focus-visible {
+        outline: 3px solid #005fcc;
+        outline-offset: 2px;
+    }
+}
+
+.o_a11y_tray_label {
+    font-size: 12px;
+    font-weight: 500;
+
+    @media (max-width: 767px) {
+        display: none;
+    }
+}
+
+// ── Panel ─────────────────────────────────────────────────────────────────────
+.o_a11y_panel {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    width: 290px;
+    background-color: #ffffff;
+    border: 1px solid #dee2e6;
+    border-radius: $radius-lg;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.14), 0 2px 8px rgba(0, 0, 0, 0.08);
+    z-index: 10000;
+    overflow: hidden;
+
+    // Responsive: panel ancho completo en mobile
+    @media (max-width: 576px) {
+        position: fixed;
+        top: auto;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        border-radius: $radius-lg $radius-lg 0 0;
+        border-bottom: none;
+    }
+}
+
+// ── Encabezado ────────────────────────────────────────────────────────────────
+.o_a11y_panel_header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    background-color: $sidebar_accent;
+    color: #ffffff;
+}
+
+.o_a11y_panel_title {
+    font-size: 15px;
+    font-weight: 600;
+    margin: 0;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+}
+
+.o_a11y_close_btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: $radius-md;
+    background: transparent;
+    color: #ffffff;
+    cursor: pointer;
+    transition: background-color 0.15s;
+
+    &:hover {
+        background: rgba(255, 255, 255, 0.15);
+    }
+
+    &:focus-visible {
+        outline: 2px solid #ffffff;
+        outline-offset: 2px;
+    }
+}
+
+// ── Secciones internas ────────────────────────────────────────────────────────
+.o_a11y_section {
+    padding: 14px 16px;
+    border-bottom: 1px solid #f0f2f5;
+
+    &:last-of-type {
+        border-bottom: none;
+    }
+}
+
+.o_a11y_section_heading {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: #6c757d;
+    margin: 0 0 10px;
+}
+
+// ── Controles de tamaño de texto ──────────────────────────────────────────────
+.o_a11y_font_row {
+    display: flex;
+    gap: 6px;
+    align-items: stretch;
+    margin-bottom: 6px;
+}
+
+.o_a11y_font_btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    border: 2px solid #dee2e6;
+    border-radius: $radius-md;
+    background: #f8f9fa;
+    color: #212529;
+    cursor: pointer;
+    font-weight: 700;
+    line-height: 1;
+    transition: border-color 0.15s, background-color 0.15s, color 0.15s;
+
+    &.o_a11y_font_decrease { font-size: 14px; }
+    &.o_a11y_font_reset    { font-size: 18px; }
+    &.o_a11y_font_increase { font-size: 21px; }
+
+    &:hover:not([disabled]) {
+        border-color: $primary_accent;
+        background: rgba($primary_accent, 0.08);
+        color: $primary_accent;
+    }
+
+    &:focus-visible {
+        outline: 3px solid #005fcc;
+        outline-offset: 2px;
+    }
+
+    &[disabled] {
+        opacity: 0.35;
+        cursor: not-allowed;
+    }
+}
+
+.o_a11y_size_label {
+    font-size: 11px;
+    color: #6c757d;
+    text-align: center;
+    margin: 4px 0 0;
+}
+
+// ── Botones de modo (Alto Contraste / Modo Oscuro) ────────────────────────────
+.o_a11y_mode_btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    min-height: 44px;
+    border: 2px solid #dee2e6;
+    border-radius: $radius-lg;
+    background: #f8f9fa;
+    color: #212529;
+    cursor: pointer;
+    text-align: left;
+    transition: border-color 0.15s, background-color 0.15s, color 0.15s;
+
+    &:hover {
+        border-color: $primary_accent;
+        background: rgba($primary_accent, 0.06);
+    }
+
+    &:focus-visible {
+        outline: 3px solid #005fcc;
+        outline-offset: 2px;
+    }
+
+    &.o_a11y_mode_active {
+        border-color: $primary_accent;
+        background: $primary_accent;
+        color: #ffffff;
+
+        .o_a11y_mode_badge {
+            background: rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+        }
+    }
+}
+
+.o_a11y_mode_icon {
+    font-size: 16px;
+    flex-shrink: 0;
+    width: 20px;
+    text-align: center;
+    color: inherit !important;
+}
+
+.o_a11y_mode_name {
+    flex-grow: 1;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.o_a11y_mode_badge {
+    flex-shrink: 0;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    padding: 2px 8px;
+    border-radius: $radius-full;
+    background: #e9ecef;
+    color: #495057;
+    transition: background-color 0.15s, color 0.15s;
+
+    &.o_a11y_badge_on {
+        background: rgba(255, 255, 255, 0.2);
+        color: #ffffff;
+    }
+}
+
+// ── Pie del panel ─────────────────────────────────────────────────────────────
+.o_a11y_panel_footer {
+    padding: 8px 16px;
+    background: #f8f9fa;
+    border-top: 1px solid #dee2e6;
+    text-align: center;
+
+    small {
+        font-size: 10px;
+        color: #adb5bd;
+        letter-spacing: 0.02em;
+    }
+}
+
+
+// =============================================================================
+// 2. CLASES DE TAMAÑO DE TEXTO
+// Aplica al font-size raíz del body (afecta a valores rem/em en cascada)
+// =============================================================================
+
+body.a11y-text-sm { font-size: 80%  !important; }
+body.a11y-text-md { font-size: 100% !important; }
+body.a11y-text-lg { font-size: 115% !important; }
+body.a11y-text-xl { font-size: 130% !important; }
+
+
+// =============================================================================
+// 3. MODO OSCURO  (body.a11y-dark-mode)
+// Paleta elegida garantiza contraste >= 4.5:1 para texto normal (WCAG AA)
+// y >= 3:1 para texto grande
+// =============================================================================
+
+body.a11y-dark-mode {
+    // ── Tokens de diseño ──
+    --dm-bg:         #0d1117;
+    --dm-surface:    #161b22;
+    --dm-surface-2:  #21262d;
+    --dm-border:     #30363d;
+    --dm-text:       #e6edf3;   // contraste sobre --dm-surface: ~12.6:1 ✓
+    --dm-text-muted: #8b949e;   // contraste sobre --dm-surface: ~4.6:1  ✓
+    --dm-accent:     #58a6ff;   // contraste sobre --dm-surface: ~5.2:1  ✓
+    --dm-sidebar:    #010409;
+    --dm-topbar:     #161b22;
+
+    background-color: var(--dm-bg) !important;
+    color: var(--dm-text) !important;
+
+    // Topbar
+    .o_main_navbar {
+        background-color: var(--dm-topbar) !important;
+        border-bottom-color: var(--dm-border) !important;
+        color: var(--dm-text) !important;
+    }
+    .o_menu_systray > *,
+    .top_heading,
+    .o_navbar_left_content,
+    .o_menu_brand,
+    .oe_topbar_name {
+        color: var(--dm-text) !important;
+    }
+    .o_main_navbar .o_menu_sections button {
+        color: var(--dm-text-muted) !important;
+        &:hover { background-color: rgba(255,255,255,0.07) !important; }
+    }
+    .navbar-border-bottom { background-color: var(--dm-accent) !important; }
+
+    // Sidebar
+    #sidebar_panel { background-color: var(--dm-sidebar) !important; }
+    .sidebar_panel .sidebar .sidebar_menu li:hover a {
+        background-color: rgba(255,255,255,0.07) !important;
+    }
+
+    // Área de contenido principal
+    .o_action           { background: var(--dm-bg)      !important; }
+    .o_form_view,
+    .o_widget_Discuss,
+    .o-mail-Discuss     { background: var(--dm-bg)      !important; color: var(--dm-text) !important; }
+    .o_content          { background-color: var(--dm-surface)   !important; box-shadow: none !important; }
+    .o_control_panel    { background-color: var(--dm-surface)   !important; box-shadow: none !important; color: var(--dm-text) !important; }
+
+    // Tablas
+    .o_list_view .o_list_table thead > tr > th {
+        background-color: var(--dm-surface-2) !important;
+        color: var(--dm-text-muted) !important;
+        border-color: var(--dm-border) !important;
+    }
+    .table > :not(caption) > * > * {
+        background-color: var(--dm-surface) !important;
+        color: var(--dm-text) !important;
+        border-bottom-color: var(--dm-border) !important;
+    }
+
+    // Formularios e inputs
+    input, select, textarea {
+        background-color: var(--dm-surface-2) !important;
+        color: var(--dm-text) !important;
+        border-color: var(--dm-border) !important;
+    }
+    .o_field_widget { color: var(--dm-text) !important; }
+
+    // Kanban
+    .o_kanban_view                                  { background: var(--dm-bg) !important; }
+    .o_kanban_view .o_kanban_group                  { background: var(--dm-surface) !important; }
+    .o_kanban_view.o_kanban_grouped                 { background-color: var(--dm-bg) !important; }
+    .o_kanban_record                                { background-color: var(--dm-surface) !important; color: var(--dm-text) !important; border-color: var(--dm-border) !important; }
+
+    // Discuss/Chatter
+    .o_Discuss .o_DiscussSidebar,
+    .o-mail-Discuss .o-mail-DiscussSidebar          { background-color: var(--dm-surface)  !important; color: var(--dm-text)       !important; }
+    .o_widget_Discuss .o_Discuss_content,
+    .o-mail-Discuss .o-mail-Thread                  { background-color: var(--dm-surface)  !important; }
+    .o_ChatterContainer, .o_Composer                { background-color: var(--dm-surface)  !important; color: var(--dm-text) !important; }
+    .o_Message.o-not-discussion                     { background-color: var(--dm-surface-2) !important; }
+
+    // Modales
+    .modal-content {
+        background-color: var(--dm-surface) !important;
+        color: var(--dm-text) !important;
+        border-color: var(--dm-border) !important;
+    }
+    .modal-header, .modal-footer {
+        background-color: var(--dm-surface-2) !important;
+        border-color: var(--dm-border) !important;
+    }
+
+    // Dropdowns
+    .dropdown-menu {
+        background-color: var(--dm-surface) !important;
+        border-color: var(--dm-border) !important;
+        color: var(--dm-text) !important;
+    }
+    .dropdown-item {
+        color: var(--dm-text) !important;
+        &:hover { background-color: var(--dm-surface-2) !important; }
+    }
+
+    // Search panel
+    .o_search_panel {
+        background-color: var(--dm-surface) !important;
+        color: var(--dm-text) !important;
+    }
+    .o_searchview {
+        background-color: var(--dm-surface-2) !important;
+        border-color: var(--dm-border) !important;
+        color: var(--dm-text) !important;
+        input { background: transparent !important; margin: 0 !important; }
+    }
+
+    // Settings
+    .settings, .settings_tab { background-color: var(--dm-surface) !important; }
+
+    // Colores de texto
+    .text-muted, .o_horizontal_separator { color: var(--dm-text-muted) !important; }
+    a:not(.btn):not(.nav-link)           { color: var(--dm-accent) !important; }
+
+    // Botón secundario en dark
+    .btn-secondary {
+        background-color: var(--dm-surface-2) !important;
+        border-color: var(--dm-border) !important;
+        color: var(--dm-text) !important;
+    }
+
+    // Toast
+    .toast { background-color: var(--dm-surface) !important; color: var(--dm-text) !important; }
+
+    // Scrollbar dark
+    ::-webkit-scrollbar-track { background-color: var(--dm-bg) !important; }
+    ::-webkit-scrollbar-thumb { background-color: #444c56 !important; }
+
+    // Panel de accesibilidad en modo oscuro
+    .o_a11y_panel {
+        background-color: var(--dm-surface);
+        border-color: var(--dm-border);
+        color: var(--dm-text);
+    }
+    .o_a11y_panel_footer {
+        background: var(--dm-surface-2);
+        border-top-color: var(--dm-border);
+        small { color: #444c56; }
+    }
+    .o_a11y_section          { border-bottom-color: var(--dm-border); }
+    .o_a11y_section_heading  { color: var(--dm-text-muted); }
+    .o_a11y_size_label       { color: var(--dm-text-muted); }
+    .o_a11y_font_btn {
+        background: var(--dm-surface-2);
+        border-color: var(--dm-border);
+        color: var(--dm-text);
+        &:hover:not([disabled]) {
+            border-color: var(--dm-accent);
+            background: rgba(88, 166, 255, 0.1);
+            color: var(--dm-accent);
+        }
+    }
+    .o_a11y_mode_btn {
+        background: var(--dm-surface-2);
+        border-color: var(--dm-border);
+        color: var(--dm-text);
+        &:hover { border-color: var(--dm-accent); background: rgba(88,166,255,0.08); }
+        &.o_a11y_mode_active { background: $primary_accent; border-color: $primary_accent; color: #fff; }
+    }
+    .o_a11y_mode_badge { background: var(--dm-border); color: var(--dm-text-muted); }
+}
+
+
+// =============================================================================
+// 4. ALTO CONTRASTE CROMÁTICO  (body.a11y-high-contrast)
+// Paleta: texto blanco (#fff) y amarillo (#ff0) sobre fondo negro (#000)
+// Ratios: blanco/negro = 21:1 ✓ | amarillo/negro ≈ 19.6:1 ✓ (supera AAA 7:1)
+// =============================================================================
+
+body.a11y-high-contrast {
+    background-color: #000000 !important;
+    color: #ffffff !important;
+
+    // Topbar
+    .o_main_navbar {
+        background-color: #000000 !important;
+        border-bottom: 2px solid #ffffff !important;
+        color: #ffffff !important;
+    }
+    .o_menu_systray > *,
+    .top_heading,
+    .o_navbar_left_content,
+    .o_menu_brand,
+    .oe_topbar_name   { color: #ffffff !important; }
+    .o_main_navbar .o_menu_sections button {
+        color: #ffff00 !important;
+        &:hover { background-color: #ffffff !important; color: #000000 !important; }
+    }
+    .navbar-border-bottom { background-color: #ffff00 !important; }
+
+    // Sidebar
+    #sidebar_panel {
+        background-color: #000000 !important;
+        border-right: 2px solid #ffffff !important;
+    }
+    .sidebar_panel .sidebar .sidebar_menu li a { color: #ffffff !important; opacity: 0.85 !important; }
+    .sidebar_panel .sidebar .sidebar_menu li:hover a,
+    .sidebar_panel .sidebar a.nav-link.active {
+        background-color: #ffffff !important;
+        color: #000000 !important;
+        opacity: 1 !important;
+    }
+
+    // Área de contenido
+    .o_action  { background: #000000 !important; }
+    .o_form_view,
+    .o_widget_Discuss,
+    .o-mail-Discuss { background: #000000 !important; color: #ffffff !important; }
+    .o_content {
+        background-color: #000000 !important;
+        border: 2px solid #ffffff !important;
+        box-shadow: none !important;
+        color: #ffffff !important;
+    }
+    .o_control_panel {
+        background-color: #000000 !important;
+        border: 2px solid #ffffff !important;
+        box-shadow: none !important;
+        color: #ffffff !important;
+    }
+
+    // Tablas
+    .table > :not(caption) > * > * {
+        background-color: #000000 !important;
+        color: #ffffff !important;
+        border-bottom-color: #ffffff !important;
+    }
+    .o_list_view .o_list_table thead > tr > th {
+        background-color: #000000 !important;
+        color: #ffff00 !important;
+        border-color: #ffffff !important;
+    }
+    tr.o_data_row:hover > td { background-color: #003300 !important; }
+
+    // Inputs
+    input, select, textarea {
+        background-color: #000000 !important;
+        color: #ffff00 !important;
+        border: 2px solid #ffffff !important;
+    }
+    label, .o_form_label, .o_cell_value { color: #ffff00 !important; }
+    .o_field_widget { color: #ffffff !important; }
+
+    // Kanban
+    .o_kanban_view                 { background: #000000 !important; }
+    .o_kanban_view .o_kanban_group { background: #000000 !important; border: 2px solid #ffffff !important; }
+    .o_kanban_record {
+        background-color: #000000 !important;
+        color: #ffffff !important;
+        border: 2px solid #ffffff !important;
+    }
+
+    // Botones con contraste alto
+    .btn {
+        border: 2px solid currentColor !important;
+        &.btn-primary {
+            background-color: #000000 !important;
+            color: #ffff00 !important;
+            border-color: #ffff00 !important;
+            &:hover { background-color: #ffff00 !important; color: #000000 !important; }
+        }
+        &.btn-secondary {
+            background-color: #000000 !important;
+            color: #ffffff !important;
+            border-color: #ffffff !important;
+            &:hover { background-color: #ffffff !important; color: #000000 !important; }
+        }
+    }
+
+    // Hipervínculos
+    a:not(.btn) {
+        color: #ffff00 !important;
+        text-decoration: underline !important;
+        &:hover { color: #ffff00 !important; background-color: #002200 !important; }
+    }
+
+    // Modales
+    .modal-content {
+        background-color: #000000 !important;
+        color: #ffffff !important;
+        border: 2px solid #ffffff !important;
+    }
+    .modal-header, .modal-footer {
+        background-color: #000000 !important;
+        border-color: #ffffff !important;
+        color: #ffffff !important;
+    }
+
+    // Dropdowns
+    .dropdown-menu {
+        background-color: #000000 !important;
+        border: 2px solid #ffffff !important;
+        color: #ffffff !important;
+    }
+    .dropdown-item {
+        color: #ffffff !important;
+        &:hover { background-color: #ffffff !important; color: #000000 !important; }
+    }
+
+    // Discuss
+    .o_Discuss .o_DiscussSidebar,
+    .o-mail-Discuss .o-mail-DiscussSidebar {
+        background-color: #000000 !important;
+        border: 2px solid #ffffff !important;
+        color: #ffffff !important;
+    }
+
+    // Chatter
+    .o_ChatterContainer, .o_Composer {
+        background-color: #000000 !important;
+        color: #ffffff !important;
+        border: 1px solid #ffffff !important;
+    }
+    .o_Message.o-not-discussion { background-color: #111111 !important; }
+
+    // Scrollbars
+    ::-webkit-scrollbar-thumb  { background-color: #ffffff !important; }
+    ::-webkit-scrollbar-track  { background-color: #000000 !important; }
+
+    // Imágenes de contenido — filtro para legibilidad
+    img:not(.logo_img):not(.sidebar_app_icon):not([role="presentation"]) {
+        filter: grayscale(100%) contrast(200%) !important;
+    }
+
+    // Elim. sombras decorativas innecesarias
+    * { text-shadow: none !important; box-shadow: none !important; }
+
+    // Botón del tray en high contrast
+    .o_a11y_tray_trigger {
+        color: #ffff00 !important;
+        border: 2px solid #ffff00 !important;
+        border-radius: $radius-md;
+    }
+
+    // Panel interno en high contrast
+    .o_a11y_panel {
+        background-color: #000000 !important;
+        border: 2px solid #ffffff !important;
+        color: #ffffff !important;
+    }
+    .o_a11y_panel_header {
+        background-color: #000000 !important;
+        border-bottom: 2px solid #ffffff !important;
+    }
+    .o_a11y_panel_title, .o_a11y_close_btn { color: #ffff00 !important; }
+    .o_a11y_section         { border-bottom-color: #444444 !important; }
+    .o_a11y_section_heading { color: #ffff00 !important; }
+    .o_a11y_font_btn {
+        background: #000000 !important;
+        border: 2px solid #ffffff !important;
+        color: #ffffff !important;
+        &:hover:not([disabled]) { background: #ffffff !important; color: #000000 !important; }
+        &[disabled]             { opacity: 0.3; }
+    }
+    .o_a11y_mode_btn {
+        background: #000000 !important;
+        border: 2px solid #ffffff !important;
+        color: #ffffff !important;
+        &:hover  { background: #ffffff !important; color: #000000 !important; }
+        &.o_a11y_mode_active {
+            background: #ffff00 !important;
+            color: #000000 !important;
+            border-color: #ffff00 !important;
+        }
+    }
+    .o_a11y_mode_badge {
+        background: #333333 !important;
+        color: #ffffff !important;
+        &.o_a11y_badge_on { background: #ffff00 !important; color: #000000 !important; }
+    }
+    .o_a11y_size_label   { color: #aaaaaa !important; }
+    .o_a11y_panel_footer {
+        background: #000000 !important;
+        border-top: 2px solid #ffffff !important;
+        small { color: #888888 !important; }
+    }
+}
+
+
+// =============================================================================
+// 5. FOCUS VISIBLE GLOBAL
+// WCAG 2.4.11 (AA) — El indicador de foco debe ser siempre visible
+// Se aplica en los tres estados: normal, dark, high-contrast
+// =============================================================================
+
+:focus-visible {
+    outline: 3px solid #005fcc !important;
+    outline-offset: 2px !important;
+    border-radius: 2px;
+}
+
+body.a11y-dark-mode :focus-visible {
+    outline-color: #58a6ff !important;
+}
+
+body.a11y-high-contrast :focus-visible {
+    outline-color: #ffff00 !important;
+    outline-width: 4px !important;
+}

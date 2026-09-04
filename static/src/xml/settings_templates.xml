@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+    <!--
+      The following template was replacing the settings tabs (including their icons)
+      with a simplified version containing only the name.
+      It has been commented out to restore the default Odoo behavior, which includes the app icons.
+    -->
+    <!--
+    <t t-inherit="web.SettingsPage" t-inherit-mode="extension" owl="1">
+        <xpath expr="//a[hasclass('tab')]" position="replace">
+            <div class="tab" t-attf-data-key="#{module.key}" role="tab" t-on-click="() => this.onSettingTabClick(module.key)">
+                <span class="app_name"><t t-esc="module.string"/></span>
+            </div>
+        </xpath>
+    </t>
+    -->
+</templates>

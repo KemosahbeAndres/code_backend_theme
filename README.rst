@@ -4,13 +4,13 @@
 
 Code Backend Theme
 ==================
-* Code Backend Theme module for Odoo 18 community editions. This is a Minimalist
-and Elegant Backend Theme for Odoo 18. This theme will change your
+* Code Backend Theme module for Odoo 19 community editions. This is a Minimalist
+and Elegant Backend Theme for Odoo 19. This theme will change your
 Old Experience to a New Experience with Odoo.
 
 Configuration
 -------
-    - www.odoo.com/documentation/18.0/setup/install.html
+    - www.odoo.com/documentation/19.0/setup/install.html
     - Install our custom addon
 
 Company

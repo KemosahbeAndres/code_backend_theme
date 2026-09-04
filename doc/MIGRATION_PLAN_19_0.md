@@ -1,6 +1,7 @@
 # Plan de migración: code_backend_theme 18.0 → 19.0
 
-**Estado**: propuesto / no iniciado.
+**Estado**: en progreso — cambios mecánicos aplicados (manifest, hooks, controlador, metadatos);
+pendiente QA visual en un Odoo 19.0 real (ver sección 4).
 **Alcance**: solo este módulo (`code_backend_theme`). No cubre otros addons del cliente.
 **Método**: los hallazgos de este documento se verificaron contrastando el código actual del módulo
 contra el código fuente real de Odoo en `github.com/odoo/odoo`, ramas `18.0` y `19.0` (no solo contra
@@ -123,8 +124,9 @@ por esta migración**. No bloquea, pero si se va a tocar este archivo igual conv
 ## 3. Checklist de tareas
 
 ### 3.1 Manifest
-- [ ] `__manifest__.py`: `"version": "18.0.1.0.0"` → `"19.0.1.0.0"`.
-- [ ] Revisar que `depends: ["web", "mail"]` siga siendo correcto tras instalar en una base 19.0 limpia.
+- [x] `__manifest__.py`: `"version": "18.0.1.0.0"` → `"19.0.1.0.0"`.
+- [ ] Revisar que `depends: ["web", "mail"]` siga siendo correcto tras instalar en una base 19.0 limpia
+      (pendiente de instalación real, ver sección 4).
 
 ### 3.2 Vistas / templates
 - [ ] `views/layout_templates.xml`: confirmar visualmente que el `<meta viewport>` y el `<link>` de
@@ -145,19 +147,19 @@ por esta migración**. No bloquea, pero si se va a tocar este archivo igual conv
       oficial de forma concluyente en esta pasada — dejar como ítem de verificación en ambiente real).
 
 ### 3.4 Hooks
-- [ ] `hooks.py`: renombrar el parámetro `cr` → `env` en `test_pre_init_hook` y `test_post_init_hook`
+- [x] `hooks.py`: renombrar el parámetro `cr` → `env` en `test_pre_init_hook` y `test_post_init_hook`
       (cosmético, sin cambio funcional) para reflejar lo que realmente reciben.
 - [ ] Opcional (fuera del alcance mínimo): refactorizar el bloque repetitivo de 25 `if menu.name == ...`
       en un diccionario `{nombre_menu: archivo_icono}` — reduce duplicación pero no es requisito de
       la migración.
 
 ### 3.5 Controlador
-- [ ] `controllers/main.py`: decidir y aplicar una de:
-  - (a) actualizar a `@http.route(..., type='jsonrpc', auth='user')`, o
-  - (b) eliminar el controlador si se confirma definitivamente que no tiene ningún caller (JS ni
-        externo) — hoy no se encontró ninguno en este módulo.
+- [x] `controllers/main.py`: actualizado a `@http.route(..., type='jsonrpc', auth='user')` (opción a).
+      Se descartó eliminarlo (opción b) pese a no tener caller propio: es un endpoint público
+      (`auth='user'`) y no hay forma de confirmar desde este repo que ningún consumidor externo lo
+      use; el fix de deprecación es la opción reversible y de menor riesgo.
 
-### 3.6 SCSS / assets (opcional, no bloqueante)
+### 3.6 SCSS / assets (opcional, no bloqueante — fuera del alcance de esta pasada)
 - [ ] `static/src/js/fields/colors.js`: si se decide corregir el bug preexistente, reemplazar la
       paleta usando la API real de `colors.js` (p. ej. sobreescribir las constantes de paleta que
       `getColor()` consulta, o registrar la paleta por el mecanismo que exponga esa versión de Odoo)
@@ -165,9 +167,9 @@ por esta migración**. No bloquea, pero si se va a tocar este archivo igual conv
 - [ ] Evaluar servir la fuente Poppins localmente en vez de vía `fonts.googleapis.com`.
 
 ### 3.7 Metadatos del módulo
-- [ ] `README.rst`: actualizar referencias a "Odoo 18" → "Odoo 19" y el enlace de instalación
+- [x] `README.rst`: actualizadas referencias "Odoo 18" → "Odoo 19" y el enlace de instalación
       (`.../documentation/18.0/...` → `.../documentation/19.0/...`).
-- [ ] `doc/RELEASE_NOTES.md`: agregar entrada `19.0.1.0.0` describiendo la migración.
+- [x] `doc/RELEASE_NOTES.md`: agregada entrada `19.0.1.0.0` describiendo la migración.
 
 ---
 

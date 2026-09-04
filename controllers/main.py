@@ -4,7 +4,7 @@ from odoo.http import request
 
 class BackendThemeController(http.Controller):
 
-    @http.route('/code_backend_theme/is_admin', type='json', auth='user')
+    @http.route('/code_backend_theme/is_admin', type='jsonrpc', auth='user')
     def is_admin(self):
         """
         Endpoint to check if the current user is a system administrator.

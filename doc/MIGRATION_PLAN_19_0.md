@@ -66,15 +66,28 @@ Los dos xpaths de `layout_templates.xml` siguen siendo válidos:
   `class="o_web_client o_sidebar_collapsed"` vía xpath es el mismo patrón que ya se usaba en 18.0, no
   cambió.
 
-### 1.4 Hooks de manifest (`pre_init_hook` / `post_init_hook`) — impacto: ninguno, solo cosmético
+### 1.4 Hooks de manifest (`pre_init_hook` / `post_init_hook`) — impacto real: **bloqueante** (corregido)
 
-Fuente: `odoo/modules/loading.py` en `19.0`.
+Fuente: `odoo/modules/loading.py` en `19.0`; `odoo/modules/__init__.py` y `odoo/modules/module.py`
+en `18.0` vs `19.0`.
 
-Odoo invoca los hooks pasando **`env`** (`getattr(py_module, pre_init)(env)`), no el cursor. El
-código actual en `hooks.py` nombra el parámetro `cr` pero en realidad recibe `env`, y funciona porque
-`env['ir.ui.menu']` es válido (Environment soporta indexado). Esto **no es un cambio de 19.0**: ya era
-así en 18.0. No bloquea la migración. Se recomienda renombrar `cr` → `env` en `hooks.py` para que el
-código sea honesto sobre lo que recibe (cosmético, sección 3.4).
+Dos hallazgos, uno cosmético (correcto en la primera pasada de este plan) y uno que esa primera
+pasada **no detectó** y sí bloqueaba la instalación real:
+
+- Odoo invoca los hooks pasando **`env`** (`getattr(py_module, pre_init)(env)`), no el cursor. El
+  parámetro se renombró `cr` → `env` (cosmético, sección 3.4).
+- **Bloqueante, encontrado recién al instalar contra un Odoo 19.0 real** (no se detectó revisando
+  solo el diff del módulo, porque el import en sí no cambió — lo que desapareció fue la función
+  importada): `hooks.py` hacía `from odoo.modules import get_module_resource`. Esa función (alias de
+  `get_resource_path`, deprecada desde 17.0 en favor de `odoo.tools.file_path`) **se eliminó por
+  completo de `odoo/modules/module.py` en 19.0** — no solo se dejó de reexportar en
+  `odoo/modules/__init__.py`, ya no existe la definición. Resultado real: `ImportError: cannot
+  import name 'get_module_resource' from 'odoo.modules'` al cargar `code_backend_theme`, que
+  **tumbaba el registro completo** (no solo el módulo) porque el `ImportError` ocurre durante
+  `load_openerp_module`, antes de que el módulo termine de cargar. **Corregido**: las 62 llamadas
+  `get_module_resource('code_backend_theme', 'static', 'src', 'img', 'icons', 'X.png')` pasaron a
+  `file_path('code_backend_theme/static/src/img/icons/X.png')` (`from odoo.tools import
+  file_path`), la API recomendada desde 17.0, presente sin cambios en 19.0.
 
 ### 1.5 `@http.route(type='json')` está deprecado desde 19.0 — impacto: bajo, con warning
 
@@ -149,6 +162,10 @@ por esta migración**. No bloquea, pero si se va a tocar este archivo igual conv
 ### 3.4 Hooks
 - [x] `hooks.py`: renombrar el parámetro `cr` → `env` en `test_pre_init_hook` y `test_post_init_hook`
       (cosmético, sin cambio funcional) para reflejar lo que realmente reciben.
+- [x] `hooks.py`: **corrección bloqueante encontrada al instalar contra Odoo 19.0 real** (no en la
+      revisión original) — `get_module_resource` ya no existe en 19.0 (§1.4). Las 62 llamadas
+      reemplazadas por `file_path('code_backend_theme/static/src/img/icons/X.png')`
+      (`from odoo.tools import file_path`).
 - [ ] Opcional (fuera del alcance mínimo): refactorizar el bloque repetitivo de 25 `if menu.name == ...`
       en un diccionario `{nombre_menu: archivo_icono}` — reduce duplicación pero no es requisito de
       la migración.

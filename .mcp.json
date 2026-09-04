@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "odoo-dev": {
+      "command": "flatpak-spawn",
+      "args": [
+        "--host", "bash", "-lc",
+        "export ODOO_BASE_COMMAND='podman compose exec odoo odoo-bin -c /etc/odoo/odoo.conf --addons-path=/mnt/extra-addons' && cd /home/andres.cubillos/proyectos/dev_odoo_18_ce/tools/odoo-dev-mcp && exec uv run src/odoo_mcp/server.py"
+      ]
+    }
+  }
+}
